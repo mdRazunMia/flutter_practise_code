@@ -34,53 +34,51 @@ class DBHelper {
 
   _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $TABLE($ID INTEGER PIRMARY KEY AUTOINCREMENT NOT NULL, $NAME TEXT, $EMAIL TEXT, $PHONE TEXT, $DATEOFBIRTH TEXT, $PASSWORD TEXT)");
+        "CREATE TABLE $TABLE($ID INTEGER PRIMARY KEY AUTOINCREMENT, $NAME TEXT, $EMAIL TEXT, $PHONE TEXT, $DATEOFBIRTH TEXT, $PASSWORD TEXT)");
   }
 
   Future<UserInformation> save(UserInformation userInformation) async {
     var dbClient = await db;
     // userInformation.id = await dbClient.insert(TABLE, employee.toMap());
     //return userInformation;
-    await dbClient.transaction((tnx) async {
-      var query =
-          "INSERT INTO $TABLE ($NAME, $EMAIL, $PHONE, $DATEOFBIRTH, $PASSWORD) VALUES('" +
-              userInformation.name +
-              "', '" +
-              userInformation.email +
-              "','" +
-              userInformation.phone +
-              "','" +
-              userInformation.dateOfBirth +
-              "','" +
-              userInformation.password +
-              "')";
-      return await tnx.rawInsert(query);
-    },
+    await dbClient.transaction(
+      (tnx) async {
+        var query =
+            "INSERT INTO $TABLE ($NAME, $EMAIL, $PHONE, $DATEOFBIRTH, $PASSWORD) VALUES('" +
+                userInformation.name +
+                "', '" +
+                userInformation.email +
+                "','" +
+                userInformation.phone +
+                "','" +
+                userInformation.dateOfBirth +
+                "','" +
+                userInformation.password +
+                "')";
+        return await tnx.rawInsert(query);
+      },
     );
     return userInformation;
   }
 
-
-    Future<List<UserInformation>> getUserInformation() async {
+  Future<List<UserInformation>> getUserInformation() async {
     var dbClient = await db;
-    List<Map> maps = await dbClient.query(TABLE, columns:[ID, NAME,EMAIL,PHONE,DATEOFBIRTH,PASSWORD]);
+    List<Map> maps = await dbClient
+        .query(TABLE, columns: [ID, NAME, EMAIL, PHONE, DATEOFBIRTH, PASSWORD]);
     // List<Map> maps = await dbClient.rawQuery("SELETE * FROM $TABLE");
 
     List<UserInformation> userInformations = [];
-    if(maps.length > 0){
-      for( int i=0 ; i<maps.length;i++){
-        userInformations.add(UserInformation.fromMap(maps[i]));// Employee.fromMap function in the emplouee.dart file
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; i++) {
+        userInformations.add(UserInformation.fromMap(
+            maps[i])); // Employee.fromMap function in the emplouee.dart file
       }
     }
     return userInformations;
   }
 
-
-    Future<int> delete(int id) async {
+  Future<int> delete(int id) async {
     var dbClient = await db;
     return await dbClient.delete(TABLE, where: '$ID = ?', whereArgs: [id]);
   }
-
-  
-
 }

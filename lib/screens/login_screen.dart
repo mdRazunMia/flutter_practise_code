@@ -10,16 +10,13 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   Future<List<UserInformation>> userInformations;
   var dbHelper;
-   @override
+  @override
   void initState() {
     super.initState();
     dbHelper = DBHelper();
     refreshList();
     //myFocusNode = FocusNode();
   }
-
-
-
 
   SingleChildScrollView dataTable(List<UserInformation> userInformations) {
     return SingleChildScrollView(
@@ -43,48 +40,44 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           DataColumn(
             label: Text('Delete'),
-          ),    
+          ),
         ],
-        rows: userInformations.map(
-          (userInformation) => DataRow(
-            cells: [
-              DataCell(
-                Text(userInformation.name),
-              ),
-              DataCell(
-                Text('${userInformation.id}'),
-              ),
-              // DataCell(
-              //   Text(userInformation.phone,
-              // ),
-              // ),
-              // DataCell(
-              //   Text(userInformation.dateOfBirth,
-              // ),
-              // ),
-              DataCell(
-                Text(userInformation.password),
-              ),
-              DataCell(
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    print(userInformation.id);
-                    dbHelper.delete(userInformation.id);
-                    refreshList();
-                  },
-                ),
-              ),
-            ]
-          )
-        ).toList(),
+        rows: userInformations
+            .map((userInformation) => DataRow(cells: [
+                  DataCell(
+                    Text(userInformation.name),
+                  ),
+                  DataCell(
+                    Text('${userInformation.id}'),
+                  ),
+                  // DataCell(
+                  //   Text(userInformation.phone,
+                  // ),
+                  // ),
+                  // DataCell(
+                  //   Text(userInformation.dateOfBirth,
+                  // ),
+                  // ),
+                  DataCell(
+                    Text(userInformation.password),
+                  ),
+                  DataCell(
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        print(userInformation.id);
+                        dbHelper.delete(userInformation.id);
+                        refreshList();
+                      },
+                    ),
+                  ),
+                ]))
+            .toList(),
       ),
     );
   }
 
-
-
-    list() {
+  list() {
     return Expanded(
       child: FutureBuilder(
         future: userInformations,
@@ -101,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-    refreshList() {
+  refreshList() {
     setState(
       () {
         userInformations = dbHelper.getUserInformation();
@@ -129,6 +122,14 @@ class _LoginScreenState extends State<LoginScreen> {
           verticalDirection: VerticalDirection.down,
           children: <Widget>[
             list(),
+            RaisedButton.icon(
+              key: null,
+              label: Text('Back'),
+              icon: Icon(Icons.chevron_left),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
           ],
         ),
       ),

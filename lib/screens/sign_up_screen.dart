@@ -5,9 +5,8 @@ import 'package:pactise_app/screens/login_screen.dart';
 import 'package:pactise_app/sqlite/db_helper.dart';
 import '../models/user_information.dart';
 
-
 class SignUpSCreen extends StatefulWidget {
-  static const logInRoute ='/login_screen.dart';
+  static const logInRoute = '/login_screen.dart';
   @override
   _SignUpSCreenState createState() => _SignUpSCreenState();
 }
@@ -26,7 +25,7 @@ String passwordLengthValidator(value) {
 
 class _SignUpSCreenState extends State<SignUpSCreen> {
   static final _formKey = GlobalKey<FormState>();
-  Future <List<UserInformation>> userInformation;
+  Future<List<UserInformation>> userInformation;
   static String name;
   static String email;
   static String phone;
@@ -186,17 +185,17 @@ class _SignUpSCreenState extends State<SignUpSCreen> {
                       FocusScope.of(context).requestFocus(new FocusNode());
 
                       date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(2100),
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime(2100),
                       );
 
                       _dateOfBirthController.text =
                           DateFormat.yMMMMEEEEd().format(date);
                       //dateOfBirth = _dateOfBirthController.text;
                     },
-                    onSaved: (value){
+                    onSaved: (value) {
                       dateOfBirth = value;
                       print("DOB: $dateOfBirth");
                     },
@@ -278,10 +277,27 @@ class _SignUpSCreenState extends State<SignUpSCreen> {
                       //     );
                       //   },
                       // );
-
-                      if(_formKey.currentState.validate()){
+                      // if (_nameController.text != null) {
+                      //   print('Name is not null');
+                      // } else {
+                      //   print('Name is null');
+                      // }
+                      if (_nameController.text != '' &&
+                          _emailController.text != '' &&
+                          _phoneController.text != '' &&
+                          _dateOfBirthController.text != '' &&
+                          _passwordController.text != '') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      }
+                      if (_formKey.currentState.validate()) {
                         _formKey.currentState.save();
-                        UserInformation e = UserInformation(null,name,email, phone, dateOfBirth, password);
+                        UserInformation e = UserInformation(
+                            null, name, email, phone, dateOfBirth, password);
                         dbHelper.save(e);
                         _nameController.clear();
                         _emailController.clear();
@@ -289,10 +305,6 @@ class _SignUpSCreenState extends State<SignUpSCreen> {
                         _dateOfBirthController.clear();
                         _passwordController.clear();
                       }
-                      Navigator.push(context, MaterialPageRoute<void>(
-                        builder: (context) => LoginScreen(),
-                      ),
-                      );
                     },
                     tooltip: 'Show me the user Information',
                     child: Icon(Icons.texture),
